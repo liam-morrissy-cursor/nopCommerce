@@ -52,6 +52,10 @@
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+
+    <!-- Frontend unit tests and Vitest config are not site content. -->
+    <Content Remove="tests\**;vitest.config.js" />
+    <None Include="tests\**;vitest.config.js" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
   </ItemGroup>
 
   <ItemGroup>

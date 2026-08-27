@@ -26,3 +26,21 @@ jobs:
       run: dotnet build --no-restore --configuration Release src
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal src
+
+  js-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/Presentation/Nop.Web
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: npm
+        cache-dependency-path: src/Presentation/Nop.Web/package-lock.json
+    - name: Install npm dependencies
+      run: npm ci
+    - name: Test
+      run: npm test
