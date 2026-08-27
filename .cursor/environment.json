@@ -1,0 +1,14 @@
+{
+  "name": "nopCommerce (.NET 10 + PostgreSQL)",
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "Nop.Web",
+      "command": "cd src/Presentation/Nop.Web && ASPNETCORE_ENVIRONMENT=Development ASPNETCORE_URLS=http://0.0.0.0:5000 dotnet run -c Debug --project Nop.Web.csproj"
+    }
+  ],
+  "ports": [
+    5000
+  ]
+}
