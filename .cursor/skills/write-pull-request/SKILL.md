@@ -15,6 +15,7 @@ Follow the user's git/PR safety rules (no force push, no `--no-verify`, commit o
 ## Body rules
 
 - Title states the outcome (`Cover order cancel status transitions`, not `Add tests` or `Update stuff`).
+- Jira-related PRs: prefix the key in the title (`[NOP-3] …`) and put `Jira: [NOP-3](https://<site>.atlassian.net/browse/NOP-3)` at the top of the body. See `.cursor/rules/jira-pr-links.mdc`. Do not invent a key.
 - What changed: concrete behavior, 1–3 bullets. Not a file list.
 - Why: the bug, false miss, or decision. Short.
 - How to verify: commands a reviewer can run, plus expected signal.

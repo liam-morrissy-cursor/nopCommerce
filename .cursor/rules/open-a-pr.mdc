@@ -11,6 +11,8 @@ When opening or updating a pull request, draft it here. Do not leave the body as
 
 `<area>: <imperative summary>` — outcome, not "add tests" or "update stuff". Example: `Orders: reject refund when payment is pending`.
 
+If the PR is tied to a Jira ticket, prefix the key: `[NOP-3] Orders: reject refund when payment is pending`. Put a browse link in the body. See `.cursor/rules/jira-pr-links.mdc`.
+
 ## Body
 
 Fill `.github/PULL_REQUEST_TEMPLATE.md`. GitHub does not apply that file to API-created PRs, so pass the markdown yourself.
