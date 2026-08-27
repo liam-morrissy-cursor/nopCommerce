@@ -8,7 +8,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${REPO_ROOT}/.cursor/env.sh"
 
-echo "==> [1/6] Ensuring the .NET 10 SDK is installed"
+echo "==> [1/5] Ensuring the .NET 10 SDK is installed"
 if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks 2>/dev/null | grep -q '^10\.'; then
     # builds.dotnet.microsoft.com (used by dotnet-install.sh) is not on the egress
     # allowlist, so install from the Microsoft apt feed (packages.microsoft.com is allowed).
@@ -21,13 +21,13 @@ if ! command -v dotnet >/dev/null 2>&1 || ! dotnet --list-sdks 2>/dev/null | gre
 fi
 dotnet --version
 
-echo "==> [2/6] Ensuring PostgreSQL is installed"
+echo "==> [2/5] Ensuring PostgreSQL is installed"
 if ! command -v psql >/dev/null 2>&1; then
     sudo apt-get update -qq
     sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq postgresql postgresql-client
 fi
 
-echo "==> [3/6] Starting PostgreSQL and provisioning the dev database"
+echo "==> [3/5] Starting PostgreSQL and provisioning the dev database"
 "${REPO_ROOT}/.cursor/pg.sh" ensure
 
 echo "==> [4/5] Building the solution"
