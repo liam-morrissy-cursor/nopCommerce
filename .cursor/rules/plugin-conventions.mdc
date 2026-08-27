@@ -1,0 +1,17 @@
+---
+description: nopCommerce plugin layout and when to add a plugin instead of editing core
+globs: "src/Plugins/**"
+alwaysApply: false
+---
+
+# Plugins
+
+Org features (payment methods, tax, shipping, CRM, widgets) go in `src/Plugins/Nop.Plugin.{Group}.{Name}/`.
+
+- Keep `plugin.json` in sync: `SystemName`, `FileName`, `SupportedVersions`.
+- Payment methods subclass `BasePlugin` and implement `IPaymentMethod` (see `Nop.Plugin.Payments.CheckMoneyOrder`).
+- Settings: a `*Settings` class plus `ISettingService`. Do not hard-code gateway credentials.
+- Register views/components the same way neighboring plugins do. Do not reach into `Nop.Web` internals if a plugin extension point exists.
+- Install/uninstall must add and remove locale resources and settings.
+
+Do not copy a plugin and leave the original `SystemName`. Colliding system names break `IPluginManager` load.

@@ -1,0 +1,23 @@
+---
+description: Money, tax, discount, capture, refund, and order-status rules
+globs: "**/Payments/**/*.cs,**/Orders/**/*.cs,**/Tax/**/*.cs,**/Discounts/**/*.cs,**/*Payment*.cs,**/*Order*Service*.cs"
+alwaysApply: false
+---
+
+# Money and orders
+
+Amounts are `decimal`. Do not use `float` or `double` for money.
+
+- Reuse `IOrderTotalCalculationService` and existing rounding. Do not ad-hoc round in a plugin.
+- Capture, refund, partial refund, and void must keep `OrderStatus` / `PaymentStatus` / `ShippingStatus` consistent with `IOrderProcessingService` guards (`CanCapture`, `CanRefund`, `CanVoid`, `CanCancelOrder`).
+- Payment plugins implement `IPaymentMethod`. Put gateway I/O in the plugin, not in `Nop.Services`.
+- Changing a total, tax, discount, or refund path without tests is incomplete.
+- Payment callbacks should be idempotent on `OrderGuid` / order id. Do not create a second order for a replayed webhook.
+
+```csharp
+// BAD
+order.OrderTotal = (double)subtotal * 1.1;
+
+// GOOD
+order.PaymentStatus = PaymentStatus.Paid; // only via IOrderProcessingService helpers that already update related fields
+```

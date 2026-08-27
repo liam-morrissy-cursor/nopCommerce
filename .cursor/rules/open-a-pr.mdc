@@ -1,0 +1,28 @@
+---
+description: How to draft GitHub pull request titles and bodies
+alwaysApply: true
+---
+
+# Open a PR
+
+When opening or updating a pull request, draft it here. Do not leave the body as Cloud Agent boilerplate. Use `gh pr create` / `gh pr edit` with a filled `--body`. Do not merge unless asked.
+
+## Title
+
+`<area>: <imperative summary>` — outcome, not "add tests" or "update stuff". Example: `Orders: reject refund when payment is pending`.
+
+## Body
+
+Fill `.github/PULL_REQUEST_TEMPLATE.md`. GitHub does not apply that file to API-created PRs, so pass the markdown yourself.
+
+- What changed: concrete behavior, 1–3 bullets. Not a file list.
+- Why: the bug, gap, or decision. Short.
+- How to verify: exact commands and the signal that means pass.
+- What did not change: omit the heading unless a reader would guess wrong.
+- Coverage: test-primary PRs only. Gap, `input → expected` cases, still open, run command. About 20 lines. Delete the section otherwise.
+
+Then run the `humanizer` skill on the body (embedded mode). Strip `<!-- … -->` comments and unfilled placeholders before submit.
+
+No PAN, secrets, tokens, or production-like PII in the title or body.
+
+Do not invent a second template. Details and examples: `.cursor/skills/write-pull-request/`.

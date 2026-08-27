@@ -1,0 +1,26 @@
+---
+description: nopCommerce C# conventions (async, DI, partial types, plugins over core forks)
+globs: "**/*.cs"
+alwaysApply: false
+---
+
+# nopCommerce conventions
+
+Match neighboring files. Do not introduce a new style.
+
+- Service and plugin methods are async and end in `Async`.
+- Types are `public partial class` / `public partial interface` unless a sibling is not.
+- Resolve dependencies through constructors. In tests, use `GetService<T>()`.
+- Query through `IRepository<T>` or existing services. Never concatenate untrusted input into SQL.
+- Org-specific behavior belongs in `src/Plugins/` (new plugin or extension of an existing one). Edit `src/Libraries/` only when the change is truly platform-wide.
+- New HTTP endpoints need tests in the matching `Nop.Web.Tests` or `Nop.Services.Tests` folder.
+
+```csharp
+// BAD — sync wrapper around existing async work
+public decimal GetFee(IList<ShoppingCartItem> cart)
+    => GetAdditionalHandlingFeeAsync(cart).GetAwaiter().GetResult();
+
+// GOOD
+public async Task<decimal> GetAdditionalHandlingFeeAsync(IList<ShoppingCartItem> cart)
+    => await _orderTotalCalculationService.GetShoppingCartAdditionalShippingChargeAsync(cart);
+```

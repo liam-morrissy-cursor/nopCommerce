@@ -1,0 +1,35 @@
+---
+description: PCI, PII, secrets, and logging rules for this financial-services nopCommerce fork
+alwaysApply: true
+---
+
+# Sensitive data
+
+Treat customer, payment, and credential data as regulated. Do not invent a second logging or storage path.
+
+## Never persist or emit
+
+- Full card numbers, CVV/CVC, magnetic-stripe data, or unmasked PANs (`Order.CardNumber`, CVV fields)
+- Secrets, connection strings, API keys, or tokens in source, tests, logs, or PR text
+- Raw government IDs, full account numbers, or passwords
+
+`AllowStoringCreditCardNumber` stays off unless an explicit, reviewed requirement says otherwise. Prefer gateway tokens.
+
+## Logs and activity
+
+- Log entity ids, statuses, and amounts. Do not log payload dumps that may contain PII or PAN.
+- `ILogger` / exception messages: strip request bodies and payment fields before write.
+- Who-did-what on money, permissions, or customer-data changes goes through `ICustomerActivityService.InsertActivityAsync`. Do not put PAN or secrets in the comment.
+
+## Tests and fixtures
+
+- Use `Payments.TestMethod` / `TestPaymentMethod`. No live cards, no production-like PANs.
+- Mask emails and names in fixtures unless the test asserts those fields.
+
+```csharp
+// BAD
+_logger.Information($"Paid with {request.CreditCardNumber}");
+
+// GOOD
+await _logger.InformationAsync($"Payment captured. OrderId={order.Id}, Status={order.PaymentStatus}");
+```

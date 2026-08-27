@@ -1,0 +1,26 @@
+---
+description: How to add NUnit tests in this repo; required for new endpoints and money/auth paths
+globs: "src/Tests/**/*.cs"
+alwaysApply: false
+---
+
+# Tests
+
+Stack: NUnit, AwesomeAssertions, Moq, FluentValidation.TestHelper. Bases: `ServiceTest`, `WebTest`, `BaseNopTest`.
+
+- Mirror production: `Nop.Services/Orders/Foo.cs` → `Nop.Tests/Nop.Services.Tests/Orders/FooTests.cs`.
+- Name tests `Can…`, `Ensure…`, or `Should…` like the files around them.
+- Resolve SUT with `GetService<T>()`. Do not new up services that need the container.
+- Cover the behavior change, including the failure and auth/permission path when one exists.
+- New API endpoints: extend existing test fixtures; do not leave the action untested.
+
+```csharp
+[Test]
+public void EnsureOrderCanOnlyBeCancelledWhenOrderStatusIsNotCancelledYet()
+{
+    var order = new Order { OrderStatus = OrderStatus.Cancelled };
+    _orderProcessingService.CanCancelOrder(order).Should().BeFalse();
+}
+```
+
+Run: `dotnet test src/Tests/Nop.Tests/Nop.Tests.csproj --filter FullyQualifiedName~YourTestClass`
