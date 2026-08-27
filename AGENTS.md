@@ -7,7 +7,7 @@ This is a financial-services customization of nopCommerce (ASP.NET Core shopping
 - Sensitive data: never put PAN, CVV, full account numbers, secrets, or raw PII in logs, fixtures, screenshots, or PR text.
 - Money: `decimal` only. Match existing rounding and `PaymentStatus` transitions.
 - Tests: NUnit + AwesomeAssertions. Inherit `ServiceTest` or `WebTest`. Mirror production folders under `src/Tests/Nop.Tests/`.
-- PRs: follow `.cursor/rules/open-a-pr.mdc`. Fill `.github/PULL_REQUEST_TEMPLATE.md`, then run `humanizer`. Test-only PRs use the Coverage section and stop there.
+- PRs: follow `.cursor/rules/open-a-pr.mdc`. Fill `.github/PULL_REQUEST_TEMPLATE.md`, then run `humanizer`. Test-only PRs use the Coverage section and stop there. Jira-related PRs prefix `[KEY]` in the title and include a browse link (`.cursor/rules/jira-pr-links.mdc`).
 
 ## Delegate
 

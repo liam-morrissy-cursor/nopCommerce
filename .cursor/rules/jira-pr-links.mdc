@@ -1,0 +1,30 @@
+---
+description: Put the Jira ticket key in the PR title and a browse link in the body
+alwaysApply: true
+---
+
+# Jira tickets on pull requests
+
+When the change is tied to a Jira issue, the GitHub PR must name that issue.
+
+A PR is related if the user cited a key (`NOP-3`), the branch or commits contain one, or the work implements a ticket from this chat. Do not invent a key.
+
+## Title
+
+Prefix the existing title shape with the key in brackets:
+
+`[NOP-3] Orders: reject refund when payment is pending`
+
+Not `Orders: reject refund when payment is pending` with the key only in the body.
+
+## Body
+
+Put a markdown browse link near the top (before What changed):
+
+`Jira: [NOP-3](https://<site>.atlassian.net/browse/NOP-3)`
+
+Use the project's real browse URL. Do not paste issue descriptions, comments, or customer data.
+
+## Unrelated work
+
+If there is no ticket, keep the normal title. Do not add a fake key or an empty Jira heading.
