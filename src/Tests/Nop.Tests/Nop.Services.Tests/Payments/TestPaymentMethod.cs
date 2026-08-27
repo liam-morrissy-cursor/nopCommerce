@@ -17,10 +17,20 @@ public class TestPaymentMethod : BasePlugin, IPaymentMethod
     /// <returns>Result</returns>
     public Task<RefundPaymentResult> RefundAsync(RefundPaymentRequest refundPaymentRequest)
     {
-        var result = new RefundPaymentResult();
-        result.AddError("Refund method not supported");
+        if (!TestSupportRefund && !TestSupportPartiallyRefund)
+        {
+            var result = new RefundPaymentResult();
+            result.AddError("Refund method not supported");
 
-        return Task.FromResult(result);
+            return Task.FromResult(result);
+        }
+
+        return Task.FromResult(new RefundPaymentResult
+        {
+            NewPaymentStatus = refundPaymentRequest.IsPartialRefund
+                ? PaymentStatus.PartiallyRefunded
+                : PaymentStatus.Refunded
+        });
     }
 
     /// <summary>
@@ -30,10 +40,18 @@ public class TestPaymentMethod : BasePlugin, IPaymentMethod
     /// <returns>Result</returns>
     public Task<VoidPaymentResult> VoidAsync(VoidPaymentRequest voidPaymentRequest)
     {
-        var result = new VoidPaymentResult();
-        result.AddError("Void method not supported");
+        if (!TestSupportVoid)
+        {
+            var result = new VoidPaymentResult();
+            result.AddError("Void method not supported");
 
-        return Task.FromResult(result);
+            return Task.FromResult(result);
+        }
+
+        return Task.FromResult(new VoidPaymentResult
+        {
+            NewPaymentStatus = PaymentStatus.Voided
+        });
     }
 
     /// <summary>
@@ -146,10 +164,18 @@ public class TestPaymentMethod : BasePlugin, IPaymentMethod
     /// <returns>Capture payment result</returns>
     public Task<CapturePaymentResult> CaptureAsync(CapturePaymentRequest capturePaymentRequest)
     {
-        var result = new CapturePaymentResult();
-        result.AddError("Capture method not supported");
+        if (!TestSupportCapture)
+        {
+            var result = new CapturePaymentResult();
+            result.AddError("Capture method not supported");
 
-        return Task.FromResult(result);
+            return Task.FromResult(result);
+        }
+
+        return Task.FromResult(new CapturePaymentResult
+        {
+            NewPaymentStatus = PaymentStatus.Paid
+        });
     }
 
     /// <summary>
