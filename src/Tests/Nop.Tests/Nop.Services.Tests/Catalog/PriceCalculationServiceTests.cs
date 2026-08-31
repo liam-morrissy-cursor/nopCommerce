@@ -6,6 +6,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Tests.Fixtures;
 using NUnit.Framework;
 
 namespace Nop.Tests.Nop.Services.Tests.Catalog;
@@ -18,6 +19,7 @@ public class PriceCalculationServiceTests : ServiceTest
     private ICustomerService _customerService;
     private IProductService _productService;
     private IPriceCalculationService _priceCalcService;
+    private GetFinalPriceDocument _finalPriceFixtures;
 
     #endregion
 
@@ -29,6 +31,7 @@ public class PriceCalculationServiceTests : ServiceTest
         _customerService = GetService<ICustomerService>();
         _productService = GetService<IProductService>();
         _priceCalcService = GetService<IPriceCalculationService>();
+        _finalPriceFixtures = GetFinalPriceFixtures.Load();
     }
 
     #endregion
@@ -44,13 +47,10 @@ public class PriceCalculationServiceTests : ServiceTest
         var store = new Store();
 
         var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
-        finalPrice.Should().Be(79.99M);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
+        AssertMatchesFixture(_finalPriceFixtures.Get("base"), finalPriceWithoutDiscounts, finalPrice);
 
         (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
-
-        finalPrice.Should().Be(19M);
-        finalPriceWithoutDiscounts.Should().Be(finalPriceWithoutDiscounts);
+        AssertMatchesFixture(_finalPriceFixtures.Get("qty-2"), finalPriceWithoutDiscounts, finalPrice);
     }
 
     [Test]
@@ -61,22 +61,13 @@ public class PriceCalculationServiceTests : ServiceTest
         var customer = new Customer();
         var store = new Store();
 
-        var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
-        finalPrice.Should().Be(79.99M);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
-        (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
-        finalPrice.Should().Be(19);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
-        (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 3);
-        finalPrice.Should().Be(19);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
-        (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 5);
-        finalPrice.Should().Be(17);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
-        (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 7);
-
-        finalPrice.Should().Be(17);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
+        foreach (var id in new[] { "base", "qty-2", "qty-3", "qty-5", "qty-7" })
+        {
+            var expected = _finalPriceFixtures.Get(id);
+            var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(
+                product, customer, store, expected.AdditionalChargeValue, expected.IncludeDiscounts, expected.Quantity);
+            AssertMatchesFixture(expected, finalPriceWithoutDiscounts, finalPrice);
+        }
     }
 
     [Test]
@@ -93,39 +84,36 @@ public class PriceCalculationServiceTests : ServiceTest
 
         customerRole.Should().NotBeNull();
 
-        var tierPrices = new List<TierPrice>
-        {
-            new() { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 2, Price = 25 },
-            new() { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 5, Price = 20 },
-            new() { CustomerRoleId = customerRole.Id, ProductId = product.Id, Quantity = 10, Price = 15 }
-        };
+        var tierPrices = _finalPriceFixtures.RoleTierInputs
+            .Select(tier => new TierPrice
+            {
+                CustomerRoleId = customerRole.Id,
+                ProductId = product.Id,
+                Quantity = tier.Quantity,
+                Price = tier.PriceValue
+            })
+            .ToList();
 
         foreach (var tierPrice in tierPrices)
             await _productService.InsertTierPriceAsync(tierPrice);
 
-        var (rezWithoutDiscount1, rez1, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false);
-        var (rezWithoutDiscount2, rez2, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 2);
-        var (rezWithoutDiscount3, rez3, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 3);
-        var (rezWithoutDiscount4, rez4, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 5);
-        var (rezWithoutDiscount5, rez5, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 10);
-        var (rezWithoutDiscount6, rez6, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 0, false, 15);
+        var roleCases = _finalPriceFixtures.Cases
+            .Where(c => c.Setup == "customerRoleTiers")
+            .ToList();
+
+        var results = new List<(GetFinalPriceCase Expected, decimal PriceWithoutDiscounts, decimal FinalPrice)>();
+        foreach (var expected in roleCases)
+        {
+            var (priceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(
+                product, customer, store, expected.AdditionalChargeValue, expected.IncludeDiscounts, expected.Quantity);
+            results.Add((expected, priceWithoutDiscounts, finalPrice));
+        }
 
         foreach (var tierPrice in tierPrices)
             await _productService.DeleteTierPriceAsync(tierPrice);
 
-        rez1.Should().Be(30M);
-        rez2.Should().Be(25);
-        rez3.Should().Be(25);
-        rez4.Should().Be(20);
-        rez5.Should().Be(15);
-        rez6.Should().Be(15);
-
-        rez1.Should().Be(rezWithoutDiscount1);
-        rez2.Should().Be(rezWithoutDiscount2);
-        rez3.Should().Be(rezWithoutDiscount3);
-        rez4.Should().Be(rezWithoutDiscount4);
-        rez5.Should().Be(rezWithoutDiscount5);
-        rez6.Should().Be(rezWithoutDiscount6);
+        foreach (var (expected, priceWithoutDiscounts, finalPrice) in results)
+            AssertMatchesFixture(expected, priceWithoutDiscounts, finalPrice);
     }
 
     [Test]
@@ -137,35 +125,57 @@ public class PriceCalculationServiceTests : ServiceTest
         var customer = new Customer();
         var store = new Store();
 
-        var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store, 5, false);
+        var expected = _finalPriceFixtures.Get("additional-fee");
+        var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(
+            product, customer, store, expected.AdditionalChargeValue, expected.IncludeDiscounts);
 
-        finalPrice.Should().Be(84.99M);
-        finalPrice.Should().Be(finalPriceWithoutDiscounts);
+        AssertMatchesFixture(expected, finalPriceWithoutDiscounts, finalPrice);
     }
 
     [Test]
     public async Task CanGetFinalProductPriceWithDiscount()
     {
-        var product = await _productService.GetProductBySkuAsync("BP_20_WSP");
+        var expected = _finalPriceFixtures.Get("discount");
+        var product = await _productService.GetProductBySkuAsync(expected.Sku);
         var customer = await _customerService.GetCustomerByEmailAsync(NopTestsDefaults.AdminEmail);
         var store = new Store();
 
         var mapping = new DiscountProductMapping
         {
-            DiscountId = 1,
+            DiscountId = expected.DiscountId ?? 1,
             EntityId = product.Id
         };
 
         await _productService.InsertDiscountProductMappingAsync(mapping);
-        await _customerService.ApplyDiscountCouponCodeAsync(customer, "123");
+        await _customerService.ApplyDiscountCouponCodeAsync(customer, expected.CouponCode);
 
         var (finalPriceWithoutDiscounts, finalPrice, _, _) = await _priceCalcService.GetFinalPriceAsync(product, customer, store);
 
         await _productService.DeleteDiscountProductMappingAsync(mapping);
-        await _customerService.RemoveDiscountCouponCodeAsync(customer, "123");
+        await _customerService.RemoveDiscountCouponCodeAsync(customer, expected.CouponCode);
 
-        finalPrice.Should().Be(69.99M);
-        finalPriceWithoutDiscounts.Should().Be(79.99M);
+        AssertMatchesFixture(expected, finalPriceWithoutDiscounts, finalPrice);
+    }
+
+    [Test]
+    public async Task CanGetPercentageAttributeAdjustmentUsingFloatCast()
+    {
+        var expected = _finalPriceFixtures.GetAttributeAdjustment("percent-float-bp-20-wsp");
+        var product = await _productService.GetProductBySkuAsync(expected.Sku);
+        var customer = new Customer();
+        var store = new Store();
+
+        var value = new ProductAttributeValue
+        {
+            AttributeValueType = AttributeValueType.Simple,
+            PriceAdjustmentUsePercentage = expected.UsePercentage,
+            PriceAdjustment = expected.PriceAdjustmentValue
+        };
+
+        var adjustment = await _priceCalcService.GetProductAttributeValuePriceAdjustmentAsync(
+            product, value, customer, store, expected.ProductPriceValue);
+
+        adjustment.Should().Be(expected.AdjustmentValue);
     }
 
     [TestCase(12.366, 12.37, RoundingType.Rounding001)]
@@ -207,6 +217,16 @@ public class PriceCalculationServiceTests : ServiceTest
     public void CanRound(decimal valueToRounding, decimal roundedValue, RoundingType roundingType)
     {
         _priceCalcService.Round(valueToRounding, roundingType).Should().Be(roundedValue);
+    }
+
+    #endregion
+
+    #region Utilities
+
+    private static void AssertMatchesFixture(GetFinalPriceCase expected, decimal priceWithoutDiscounts, decimal finalPrice)
+    {
+        finalPrice.Should().Be(expected.FinalPriceValue);
+        priceWithoutDiscounts.Should().Be(expected.PriceWithoutDiscountsValue);
     }
 
     #endregion
