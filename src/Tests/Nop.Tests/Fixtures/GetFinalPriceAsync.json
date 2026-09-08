@@ -1,0 +1,153 @@
+{
+  "description": "Golden GetFinalPriceAsync expects for PriceCalculationServiceTests. Decimals are strings so Wave 3 parity can reuse this file without float conversion. Do not change a price by a cent without an intentional catalog change.",
+  "roleTierInputs": [
+    { "quantity": 2, "price": "25" },
+    { "quantity": 5, "price": "20" },
+    { "quantity": 10, "price": "15" }
+  ],
+  "cases": [
+    {
+      "id": "base",
+      "sku": "BP_20_WSP",
+      "setup": "none",
+      "quantity": 1,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "79.99",
+      "priceWithoutDiscounts": "79.99"
+    },
+    {
+      "id": "qty-2",
+      "sku": "BP_20_WSP",
+      "setup": "none",
+      "quantity": 2,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "19",
+      "priceWithoutDiscounts": "19"
+    },
+    {
+      "id": "qty-3",
+      "sku": "BP_20_WSP",
+      "setup": "none",
+      "quantity": 3,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "19",
+      "priceWithoutDiscounts": "19"
+    },
+    {
+      "id": "qty-5",
+      "sku": "BP_20_WSP",
+      "setup": "none",
+      "quantity": 5,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "17",
+      "priceWithoutDiscounts": "17"
+    },
+    {
+      "id": "qty-7",
+      "sku": "BP_20_WSP",
+      "setup": "none",
+      "quantity": 7,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "17",
+      "priceWithoutDiscounts": "17"
+    },
+    {
+      "id": "additional-fee",
+      "sku": "BP_20_WSP",
+      "setup": "none",
+      "quantity": 1,
+      "additionalCharge": "5",
+      "includeDiscounts": false,
+      "finalPrice": "84.99",
+      "priceWithoutDiscounts": "84.99"
+    },
+    {
+      "id": "discount",
+      "sku": "BP_20_WSP",
+      "setup": "discount",
+      "quantity": 1,
+      "additionalCharge": "0",
+      "includeDiscounts": true,
+      "couponCode": "123",
+      "discountId": 1,
+      "finalPrice": "69.99",
+      "priceWithoutDiscounts": "79.99"
+    },
+    {
+      "id": "role-tier-qty-1",
+      "sku": "NK_ZSJ_MM",
+      "setup": "customerRoleTiers",
+      "quantity": 1,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "30",
+      "priceWithoutDiscounts": "30"
+    },
+    {
+      "id": "role-tier-qty-2",
+      "sku": "NK_ZSJ_MM",
+      "setup": "customerRoleTiers",
+      "quantity": 2,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "25",
+      "priceWithoutDiscounts": "25"
+    },
+    {
+      "id": "role-tier-qty-3",
+      "sku": "NK_ZSJ_MM",
+      "setup": "customerRoleTiers",
+      "quantity": 3,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "25",
+      "priceWithoutDiscounts": "25"
+    },
+    {
+      "id": "role-tier-qty-5",
+      "sku": "NK_ZSJ_MM",
+      "setup": "customerRoleTiers",
+      "quantity": 5,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "20",
+      "priceWithoutDiscounts": "20"
+    },
+    {
+      "id": "role-tier-qty-10",
+      "sku": "NK_ZSJ_MM",
+      "setup": "customerRoleTiers",
+      "quantity": 10,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "15",
+      "priceWithoutDiscounts": "15"
+    },
+    {
+      "id": "role-tier-qty-15",
+      "sku": "NK_ZSJ_MM",
+      "setup": "customerRoleTiers",
+      "quantity": 15,
+      "additionalCharge": "0",
+      "includeDiscounts": false,
+      "finalPrice": "15",
+      "priceWithoutDiscounts": "15"
+    }
+  ],
+  "attributeAdjustments": [
+    {
+      "id": "percent-float-bp-20-wsp",
+      "sku": "BP_20_WSP",
+      "productPrice": "79.99",
+      "priceAdjustment": "16.67",
+      "usePercentage": true,
+      "adjustment": "13.33433",
+      "note": "Locks GetProductAttributeValuePriceAdjustmentAsync (float) casts. Pure decimal is 13.334333. Do not change production to decimal without a catalog decision."
+    }
+  ]
+}
