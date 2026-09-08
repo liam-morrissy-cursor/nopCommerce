@@ -29,6 +29,7 @@ public partial class PriceCalculationService : IPriceCalculationService
     protected readonly IPriceListService _priceListService;
     protected readonly IProductAttributeParser _productAttributeParser;
     protected readonly IProductService _productService;
+    protected readonly IRoundSidecarClient _roundSidecarClient;
     protected readonly IStaticCacheManager _staticCacheManager;
 
     #endregion
@@ -45,6 +46,7 @@ public partial class PriceCalculationService : IPriceCalculationService
         IPriceListService priceListService,
         IProductAttributeParser productAttributeParser,
         IProductService productService,
+        IRoundSidecarClient roundSidecarClient,
         IStaticCacheManager staticCacheManager)
     {
         _catalogSettings = catalogSettings;
@@ -57,6 +59,7 @@ public partial class PriceCalculationService : IPriceCalculationService
         _priceListService = priceListService;
         _productAttributeParser = productAttributeParser;
         _productService = productService;
+        _roundSidecarClient = roundSidecarClient;
         _staticCacheManager = staticCacheManager;
     }
 
@@ -615,6 +618,26 @@ public partial class PriceCalculationService : IPriceCalculationService
     /// <param name="roundingType">The rounding type</param>
     /// <returns>Rounded value</returns>
     public virtual decimal Round(decimal value, RoundingType roundingType)
+    {
+        if (RoundSidecarSettings.IsEnabled)
+        {
+            try
+            {
+                return _roundSidecarClient.Round(value, roundingType);
+            }
+            catch
+            {
+                // fall back to in-process C# when the sidecar is unavailable
+            }
+        }
+
+        return RoundInProcess(value, roundingType);
+    }
+
+    /// <summary>
+    /// In-process C# round implementation (baseline path)
+    /// </summary>
+    protected virtual decimal RoundInProcess(decimal value, RoundingType roundingType)
     {
         //default round (Rounding001)
         var rez = Math.Round(value, 2);

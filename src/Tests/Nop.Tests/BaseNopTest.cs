@@ -337,6 +337,7 @@ public partial class BaseNopTest
         services.AddTransient<IPermissionService, PermissionService>();
         services.AddTransient<IAclService, AclService>();
         services.AddTransient<IPriceCalculationService, PriceCalculationService>();
+        services.AddSingleton<IRoundSidecarClient, RoundSidecarClient>();
         services.AddTransient<IPriceListService, PriceListService>();
         services.AddTransient<IGeoLookupService, GeoLookupService>();
         services.AddTransient<ICountryService, CountryService>();

@@ -168,6 +168,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IAclService, AclService>();
         services.AddScoped<IPriceCalculationService, PriceCalculationService>();
+        services.AddSingleton<IRoundSidecarClient, RoundSidecarClient>();
         services.AddScoped<IGeoLookupService, GeoLookupService>();
         services.AddScoped<ICountryService, CountryService>();
         services.AddScoped<ICurrencyService, CurrencyService>();
