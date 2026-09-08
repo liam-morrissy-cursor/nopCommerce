@@ -33,6 +33,14 @@ echo "==> [3/5] Starting PostgreSQL and provisioning the dev database"
 echo "==> [4/5] Building the solution"
 dotnet build "${REPO_ROOT}/src/NopCommerce.sln" -c Debug
 
+echo "==> [4b/5] Building nop-round sidecar"
+if command -v cargo >/dev/null 2>&1 || command -v "$HOME/.cargo/bin/cargo" >/dev/null 2>&1; then
+    export PATH="$HOME/.cargo/bin:${PATH}"
+    cargo build --release --manifest-path "${REPO_ROOT}/nop-round/Cargo.toml"
+else
+    echo "    cargo not found; skipping nop-round sidecar build"
+fi
+
 echo "==> [5/5] Installing nopCommerce (schema + sample data) if needed"
 if "${REPO_ROOT}/.cursor/pg.sh" is-seeded; then
     echo "    Database already contains nopCommerce data; skipping installation."
