@@ -1,0 +1,342 @@
+[
+  {
+    "value": "12.366",
+    "roundingType": "Rounding001",
+    "expected": "12.37"
+  },
+  {
+    "value": "12.363",
+    "roundingType": "Rounding001",
+    "expected": "12.36"
+  },
+  {
+    "value": "12.000",
+    "roundingType": "Rounding001",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.001",
+    "roundingType": "Rounding001",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.34",
+    "roundingType": "Rounding005Up",
+    "expected": "12.35"
+  },
+  {
+    "value": "12.36",
+    "roundingType": "Rounding005Up",
+    "expected": "12.40"
+  },
+  {
+    "value": "12.35",
+    "roundingType": "Rounding005Up",
+    "expected": "12.35"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding005Up",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.05",
+    "roundingType": "Rounding005Up",
+    "expected": "12.05"
+  },
+  {
+    "value": "12.20",
+    "roundingType": "Rounding005Up",
+    "expected": "12.20"
+  },
+  {
+    "value": "12.001",
+    "roundingType": "Rounding005Up",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.34",
+    "roundingType": "Rounding005Down",
+    "expected": "12.30"
+  },
+  {
+    "value": "12.36",
+    "roundingType": "Rounding005Down",
+    "expected": "12.35"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding005Down",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.05",
+    "roundingType": "Rounding005Down",
+    "expected": "12.05"
+  },
+  {
+    "value": "12.20",
+    "roundingType": "Rounding005Down",
+    "expected": "12.20"
+  },
+  {
+    "value": "12.35",
+    "roundingType": "Rounding01Up",
+    "expected": "12.40"
+  },
+  {
+    "value": "12.36",
+    "roundingType": "Rounding01Up",
+    "expected": "12.40"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding01Up",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.10",
+    "roundingType": "Rounding01Up",
+    "expected": "12.10"
+  },
+  {
+    "value": "12.35",
+    "roundingType": "Rounding01Down",
+    "expected": "12.30"
+  },
+  {
+    "value": "12.36",
+    "roundingType": "Rounding01Down",
+    "expected": "12.40"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding01Down",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.10",
+    "roundingType": "Rounding01Down",
+    "expected": "12.10"
+  },
+  {
+    "value": "12.24",
+    "roundingType": "Rounding05",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.49",
+    "roundingType": "Rounding05",
+    "expected": "12.50"
+  },
+  {
+    "value": "12.74",
+    "roundingType": "Rounding05",
+    "expected": "12.50"
+  },
+  {
+    "value": "12.99",
+    "roundingType": "Rounding05",
+    "expected": "13.00"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding05",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.50",
+    "roundingType": "Rounding05",
+    "expected": "12.50"
+  },
+  {
+    "value": "12.49",
+    "roundingType": "Rounding1",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.50",
+    "roundingType": "Rounding1",
+    "expected": "13.00"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding1",
+    "expected": "12.00"
+  },
+  {
+    "value": "12.01",
+    "roundingType": "Rounding1Up",
+    "expected": "13.00"
+  },
+  {
+    "value": "12.99",
+    "roundingType": "Rounding1Up",
+    "expected": "13.00"
+  },
+  {
+    "value": "12.00",
+    "roundingType": "Rounding1Up",
+    "expected": "12.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding001",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding005Up",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding005Down",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding01Up",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding01Down",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding05",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding1",
+    "expected": "0.00"
+  },
+  {
+    "value": "0.005",
+    "roundingType": "Rounding1Up",
+    "expected": "0.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding001",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding005Up",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding005Down",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding01Up",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding01Down",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding05",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding1",
+    "expected": "10.00"
+  },
+  {
+    "value": "10.005",
+    "roundingType": "Rounding1Up",
+    "expected": "10.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding001",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding005Up",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding005Down",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding01Up",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding01Down",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding05",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding1",
+    "expected": "0.00"
+  },
+  {
+    "value": "-0.005",
+    "roundingType": "Rounding1Up",
+    "expected": "0.00"
+  },
+  {
+    "value": "12.125",
+    "roundingType": "Rounding001",
+    "expected": "12.12"
+  },
+  {
+    "value": "12.365",
+    "roundingType": "Rounding001",
+    "expected": "12.36"
+  },
+  {
+    "value": "1.225",
+    "roundingType": "Rounding001",
+    "expected": "1.22"
+  },
+  {
+    "value": "-12.125",
+    "roundingType": "Rounding001",
+    "expected": "-12.12"
+  },
+  {
+    "value": "12.125",
+    "roundingType": "Rounding005Up",
+    "expected": "12.15"
+  },
+  {
+    "value": "12.125",
+    "roundingType": "Rounding1Up",
+    "expected": "13.00"
+  },
+  {
+    "value": "-12.34",
+    "roundingType": "Rounding005Up",
+    "expected": "-12.25"
+  },
+  {
+    "value": "-0.01",
+    "roundingType": "Rounding005Up",
+    "expected": "0.05"
+  }
+]

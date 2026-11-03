@@ -620,4 +620,10 @@ public partial class CatalogSettings : ISettings
     /// Gets or sets a number of reviews per page on vendor reviews page
     /// </summary>
     public int VendorProductReviewsPageSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether price rounding calls the in-process Rust library.
+    /// A missing setting stays off. A missing library or a failed call keeps the C# rounding.
+    /// </summary>
+    public bool UseRustPriceRounding { get; set; }
 }

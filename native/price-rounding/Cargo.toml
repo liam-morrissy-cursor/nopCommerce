@@ -1,0 +1,16 @@
+[package]
+name = "price-rounding"
+version = "0.1.0"
+edition = "2021"
+description = "In-process price rounding for nopCommerce"
+publish = false
+
+[lib]
+name = "price_rounding"
+crate-type = ["cdylib"]
+
+[dependencies]
+rust_decimal = "1"
+
+[dev-dependencies]
+serde_json = "1"

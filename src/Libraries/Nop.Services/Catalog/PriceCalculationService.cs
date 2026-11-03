@@ -616,6 +616,22 @@ public partial class PriceCalculationService : IPriceCalculationService
     /// <returns>Rounded value</returns>
     public virtual decimal Round(decimal value, RoundingType roundingType)
     {
+        // Null settings stay off so callers that construct the service without a catalog can still round.
+        if (_catalogSettings?.UseRustPriceRounding == true &&
+            RustPriceRounding.TryRound(value, roundingType, out var rustRounded))
+            return rustRounded;
+
+        return RoundInProcess(value, roundingType);
+    }
+
+    /// <summary>
+    /// Round with the C# decimal body. Used when the Rust library is off, missing, or returns an error.
+    /// </summary>
+    /// <param name="value">Value to round</param>
+    /// <param name="roundingType">The rounding type</param>
+    /// <returns>Rounded value</returns>
+    private decimal RoundInProcess(decimal value, RoundingType roundingType)
+    {
         //default round (Rounding001)
         var rez = Math.Round(value, 2);
         var fractionPart = (rez - Math.Truncate(rez)) * 10;
