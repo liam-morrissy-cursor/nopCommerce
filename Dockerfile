@@ -1,3 +1,11 @@
+# musl cdylib for the Alpine runtime. Pinned to amd64 so the triple stays x86_64-unknown-linux-musl.
+FROM --platform=linux/amd64 rust:1-alpine AS price-rounding
+RUN apk add --no-cache musl-dev
+WORKDIR /native/price-rounding
+COPY native/price-rounding/Cargo.toml native/price-rounding/Cargo.lock ./
+COPY native/price-rounding/src ./src
+RUN cargo build --release --target x86_64-unknown-linux-musl
+
 # create the build instance 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 
@@ -47,6 +55,8 @@ RUN apk add libc-dev tzdata gcompat --no-cache
 WORKDIR /app
 
 COPY --from=build /app/published .
+# Alpine is musl. The price-rounding stage builds x86_64-unknown-linux-musl; a glibc .so will not load here.
+COPY --from=price-rounding /native/price-rounding/target/x86_64-unknown-linux-musl/release/libprice_rounding.so ./libprice_rounding.so
 
 ENV ASPNETCORE_URLS=http://+:80
 EXPOSE 80
