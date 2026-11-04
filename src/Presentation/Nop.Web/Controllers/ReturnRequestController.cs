@@ -218,6 +218,10 @@ public partial class ReturnRequestController : BasePublicController
         {
             if (!await ValidateWithdrawalTokenAsync(order, model.WithdrawalToken))
                 return Challenge();
+
+            customer = await _customerService.GetCustomerByIdAsync(order.CustomerId);
+            if (customer == null)
+                return Challenge();
         }
         else
         {
@@ -241,9 +245,13 @@ public partial class ReturnRequestController : BasePublicController
         var store = await _storeContext.GetCurrentStoreAsync();
 
         //returnable products
-        var orderItems = await _orderService.GetOrderItemsAsync(order.Id, isNotReturnable: false);
-        foreach (var orderItem in orderItems)
+        var returnRequestAvailability = await _returnRequestService.GetReturnRequestAvailabilityAsync(order.Id);
+        foreach (var returnableOrderItem in returnRequestAvailability?.ReturnableOrderItems ?? [])
         {
+            if (returnableOrderItem.AvailableQuantityForReturn <= 0)
+                continue;
+
+            var orderItem = returnableOrderItem.OrderItem;
             var quantity = 0; //parse quantity
             foreach (var formKey in form.Keys)
             {
@@ -254,7 +262,7 @@ public partial class ReturnRequestController : BasePublicController
                 }
             }
 
-            if (quantity > 0)
+            if (quantity > 0 && quantity <= returnableOrderItem.AvailableQuantityForReturn)
             {
                 var rrr = await _returnRequestService.GetReturnRequestReasonByIdAsync(model.ReturnRequestReasonId);
                 var rra = await _returnRequestService.GetReturnRequestActionByIdAsync(model.ReturnRequestActionId);
