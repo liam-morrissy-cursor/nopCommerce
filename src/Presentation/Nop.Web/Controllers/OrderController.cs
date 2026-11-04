@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Http;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -214,20 +215,26 @@ public partial class OrderController : BasePublicController
         return File(bytes, MimeTypes.ApplicationPdf, string.Format(await _localizationService.GetResourceAsync("PDFInvoice.FileName"), order.CustomOrderNumber) + ".pdf");
     }
 
+    [HttpPost]
     public async Task<IActionResult> CancelOrder(int orderId)
     {
-        if(!_orderSettings.AllowCustomersCancelOrders)
+        if (!_orderSettings.AllowCustomersCancelOrders)
             return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
 
         var order = await _orderService.GetOrderByIdAsync(orderId);
         var customer = await _workContext.GetCurrentCustomerAsync();
         if (order == null || customer.Id != order.CustomerId)
             return Challenge();
-        
+
+        if (order.PaymentStatus != PaymentStatus.Pending)
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+
+        if (!_orderProcessingService.CanCancelOrder(order))
+            return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
+
         try
         {
-            if (_orderProcessingService.CanCancelOrder(order))
-                await _orderProcessingService.CancelOrderAsync(order, false);
+            await _orderProcessingService.CancelOrderAsync(order, false);
         }
         catch
         {
@@ -236,7 +243,7 @@ public partial class OrderController : BasePublicController
         }
 
         await _orderService.UpdateOrderAsync(order);
-       _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Order.Cancelled"));
+        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Order.Cancelled"));
 
         return RedirectToRoute(NopRouteNames.Standard.ORDER_DETAILS, new { orderId });
     }

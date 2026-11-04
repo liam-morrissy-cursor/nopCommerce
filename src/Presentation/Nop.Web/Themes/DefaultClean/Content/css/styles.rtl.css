@@ -5470,7 +5470,8 @@ label, label + * {
   padding: 0 0 10px;
 }
 
-.order-details-page .page-title a {
+.order-details-page .page-title a,
+.order-details-page .page-title .cancel-order-button {
   display: inline-block;
   min-width: 180px;
   margin: 5px 0;
@@ -5480,6 +5481,10 @@ label, label + * {
   padding: 10px 20px;
   font-size: 15px;
   color: #fff;
+}
+
+.order-details-page .page-title form {
+  display: inline;
 }
 
 .order-details-page .page-title a:hover,
@@ -5496,12 +5501,12 @@ label, label + * {
   background-color: var(--accent-blue-active-color);
 }
 
-.order-details-page .page-title a.cancel-order-button {
+.order-details-page .page-title .cancel-order-button {
   background-color: #cc0000;
 }
 
-.order-details-page .page-title a.cancel-order-button:hover,
-.order-details-page .page-title a.cancel-order-button:focus {
+.order-details-page .page-title .cancel-order-button:hover,
+.order-details-page .page-title .cancel-order-button:focus {
   background-color: #f00000;
 }
 
